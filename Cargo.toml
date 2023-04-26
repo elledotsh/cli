@@ -1,0 +1,12 @@
+[package]
+name = "elle"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+async-std = { version = "1.12.0", features = ["attributes"] }
+clap = { version = "4.2.4", features = ["derive"] }
+notify = "5.1.0"
+signal-hook = "0.3.15"
+spinners = "4.1.0"
+subprocess = "0.2.9"

@@ -1,3 +1,8 @@
+use php_codegen::comment::Document;
+use php_codegen::data_type::DataType;
+use php_codegen::file::File;
+use php_codegen::function::Function;
+use php_codegen::parameter::Parameter;
 use signal_hook::{
     consts::{SIGINT, SIGTERM},
     iterator::Signals,
@@ -8,15 +13,23 @@ use std::{
     error::Error,
     fs,
     io::{self, BufRead},
+    path::Path,
     process::Command,
     thread,
 };
-use subprocess::{Exec, Popen, PopenConfig, Redirection};
+use subprocess::{Exec, Redirection};
 
+mod generator;
 mod observer;
 
-pub fn make(name: &String, kind: &String) {
-    println!("[elle] Generating {} {}", name, kind);
+pub fn make_migration_create(name: &String) {
+    println!("[elle] Generating migration {}", name);
+    generator::make_migration_create(name);
+}
+
+pub fn make_model(name: &String) {
+    println!("[elle] Generating migration {}", name);
+    generator::make_model(name);
 }
 
 pub fn new(name: &String) {

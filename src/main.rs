@@ -5,9 +5,8 @@ use ::clap::{Args, Parser, Subcommand};
 mod elle;
 
 #[derive(Parser)]
-#[clap(name = "elle", version = env!("CARGO_PKG_VERSION"))]
-#[command(author, version, about, long_about = None)]
-#[command(about = "elle: a tiny metaframework for Laravel")]
+#[command(name = "elle", version = env!("CARGO_PKG_VERSION"))]
+#[command(about = "elle: a tiny metaframework for Laravel", long_about = None)]
 
 pub struct Cli {
     #[command(subcommand)]
@@ -15,9 +14,12 @@ pub struct Cli {
 }
 
 #[derive(Args)]
-struct MakeArgs {
+struct MakeMigrationCreateArgs {
     name: String,
-    kind: String,
+}
+#[derive(Args)]
+struct MakeModelArgs {
+    name: String,
 }
 #[derive(Args)]
 struct NewArgs {
@@ -31,7 +33,13 @@ struct ServeArgs {
 
 #[derive(Subcommand)]
 enum Commands {
-    Make(MakeArgs),
+    #[command(
+        name = "make:migration:create",
+        about = "generates a new creation migration"
+    )]
+    MakeMigrationCreate(MakeMigrationCreateArgs),
+    #[command(name = "make:model", about = "generates a new model")]
+    MakeModel(MakeModelArgs),
     New(NewArgs),
     Serve(ServeArgs),
 }
@@ -40,7 +48,8 @@ enum Commands {
 async fn main() -> Result<(), Box<dyn Error>> {
     let args = Cli::parse();
     match args.command {
-        Commands::Make(args) => elle::make(&args.name, &args.kind),
+        Commands::MakeMigrationCreate(args) => elle::make_migration_create(&args.name),
+        Commands::MakeModel(args) => elle::make_model(&args.name),
         Commands::New(args) => elle::new(&args.name),
         Commands::Serve(args) => elle::serve(
             args.host.unwrap_or("localhost".to_string()),

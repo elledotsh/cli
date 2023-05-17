@@ -22,6 +22,11 @@ use subprocess::{Exec, Redirection};
 mod generator;
 mod observer;
 
+pub fn make_action(kind: &String, name: &String) {
+    println!("[elle] Generating {} action {}", kind, name);
+    generator::make_action(kind, name);
+}
+
 pub fn make_migration_create(name: &String) {
     println!("[elle] Generating migration {}", name);
     generator::make_migration_create(name);
@@ -33,10 +38,10 @@ pub fn make_model(name: &String) {
 }
 
 pub fn new(name: &String) {
-    let mut sp = Spinner::new(Spinners::Aesthetic, "Crafting your new application".into());
+    let mut spinner = Spinner::new(Spinners::Aesthetic, "Crafting your new application".into());
     Command::new("cp")
         .arg("-r")
-        .arg("/Users/ghost/Code/elledotsh/elle")
+        .arg("./elle")
         .arg(&format!("./{}", name))
         .output()
         .expect("failed to copy elle/framework");
@@ -47,10 +52,29 @@ pub fn new(name: &String) {
         .expect("failed to create .elle directory");
     Command::new("cp")
         .arg("-r")
-        .arg("/Users/ghost/Code/elledotsh/opinion/.")
+        .arg("./opinion/.")
         .arg(&format!("./{}/.elle/.laravel", name))
         .output()
         .expect("failed to copy elle/opinion");
+    Command::new("touch")
+        .arg(".gitignore")
+        .output()
+        .expect("failed to create .gitignore file");
+    Command::new("cp")
+        .arg("./cli/elle")
+        .arg(&format!("./{}/", name))
+        .output()
+        .expect("failed to copy elle cli");
+    Command::new("composer")
+        .cwd(&format!("./{}/", name))
+        .arg("install")
+        .output()
+        .expect("unable to install composer dependencies in ellevel")
+    Command::new("composer")
+        .cwd(&format!("./{}/.elle/.laravel", name))
+        .arg("install")
+        .output()
+        .expect("unable to install composer dependencies in metavel")
 
     // Command::new("composer")
     //     .args(&[
@@ -70,7 +94,7 @@ pub fn new(name: &String) {
     //     ])
     //     .output()
     //     .expect("Failed to download elle/opinion");
-    sp.stop_with_message("Application crafted!".into());
+    spinner.stop_with_message("Application crafted!".into());
 }
 
 pub fn serve(host: String, port: u16) {
@@ -109,8 +133,9 @@ fn start_server(host: String, port: u16) -> Result<(), Box<dyn Error>> {
 
     thread::spawn(move || {
         let reader = io::BufReader::new(stdout);
-        for line in reader.lines() {
+        for _line in reader.lines() {
             // unwrap and parse the line for what we would like to display
+            // println!(line);
         }
     });
 

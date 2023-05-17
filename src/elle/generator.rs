@@ -10,6 +10,20 @@ use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::time::SystemTime;
 
+pub fn make_action(kind: &String, name: &String) {
+    // let kind_directory = {
+    //     'http': 'Http',
+    //     'job': 'Job'
+    // };
+    // println!(kind_directory);
+
+    let file_header = PhpFile::new()
+        .declare("strict_types", 1)
+        .uses("Illuminate\\Database\\Migrations\\Migration")
+        .uses("Illuminate\\Database\\Schema\\Blueprint")
+        .uses("Illuminate\\Support\\Facades\\Schema");
+}
+
 pub fn make_migration_create(table_name: &String) {
     let filename = format!(
         "./database/migrations/{}_create_{}_table.php",

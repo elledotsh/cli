@@ -14,6 +14,12 @@ pub struct Cli {
 }
 
 #[derive(Args)]
+struct MakeActionArgs {
+    kind: String,
+    name: String,
+}
+
+#[derive(Args)]
 struct MakeMigrationCreateArgs {
     name: String,
 }
@@ -40,6 +46,8 @@ enum Commands {
     MakeMigrationCreate(MakeMigrationCreateArgs),
     #[command(name = "make:model", about = "generates a new model")]
     MakeModel(MakeModelArgs),
+    #[command(name = "make:action", about="generates a new action")]
+    MakeAction(MakeActionArgs),
     New(NewArgs),
     Serve(ServeArgs),
 }
@@ -48,6 +56,7 @@ enum Commands {
 async fn main() -> Result<(), Box<dyn Error>> {
     let args = Cli::parse();
     match args.command {
+        Commands::MakeAction(args) => elle::make_action(&args.kind, &args.name),
         Commands::MakeMigrationCreate(args) => elle::make_migration_create(&args.name),
         Commands::MakeModel(args) => elle::make_model(&args.name),
         Commands::New(args) => elle::new(&args.name),

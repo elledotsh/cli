@@ -66,15 +66,15 @@ pub fn new(name: &String) {
         .output()
         .expect("failed to copy elle cli");
     Command::new("composer")
-        .cwd(&format!("./{}/", name))
+        .current_dir(&format!("./{}/", name))
         .arg("install")
         .output()
-        .expect("unable to install composer dependencies in ellevel")
+        .expect("unable to install composer dependencies in ellevel");
     Command::new("composer")
-        .cwd(&format!("./{}/.elle/.laravel", name))
+        .current_dir(&format!("./{}/.elle/.laravel", name))
         .arg("install")
         .output()
-        .expect("unable to install composer dependencies in metavel")
+        .expect("unable to install composer dependencies in metavel");
 
     // Command::new("composer")
     //     .args(&[

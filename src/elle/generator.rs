@@ -40,12 +40,12 @@ pub fn make_migration_create(table_name: &String) {
     let file_data = format!(
         r#"
     {}
-    
+
     return new class extends Migration
     {{
         public function up() : void {{
             Schema::create('{}', function (Blueprint $table) {{
-                
+
             }});
         }}
 
